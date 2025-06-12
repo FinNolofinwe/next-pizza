@@ -24,7 +24,7 @@ const ProductsGroupList: React.FC<ProductsListProps> = ({
 }) => {
 	const setActiveCategoryId = useCategoryStore((state) => state.setActiveId)
 	const intersectionRef = React.useRef<HTMLDivElement | null>(null)
-	const intersection = useIntersection(intersectionRef, {
+	const intersection = useIntersection(intersectionRef as React.RefObject<HTMLElement>, {
 		threshold: 0.4,
 	})
 
