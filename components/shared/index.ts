@@ -9,4 +9,5 @@ import Filters from "./Filters";
 import CheckboxFilterGroup from "./checkbox-filter-group";
 import ProductCard from "./product-card";
 import ProductsGroupList from "./products-group-list";
-export { Header, Container, Title, Categories, SortPopup, TopBar, FilterCheckbox, Filters, CheckboxFilterGroup, ProductCard, ProductsGroupList };
+import SearchInput from "./search-input";
+export { Header, SearchInput, Container, Title, Categories, SortPopup, TopBar, FilterCheckbox, Filters, CheckboxFilterGroup, ProductCard, ProductsGroupList };

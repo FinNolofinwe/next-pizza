@@ -4,7 +4,9 @@ import { FC } from 'react'
 import { Container } from './container'
 import { Button } from '../ui'
 import Image from 'next/image'
+import Link from 'next/link'
 import { User, ShoppingCart, ArrowRight } from 'lucide-react'
+import { SearchInput } from './index'
 interface HeaderProps {
 	className?: string
 }
@@ -13,12 +15,18 @@ const Header: FC<HeaderProps> = ({ className }) => {
 		<header className={cn('border-b border-gray-300', className)}>
 			<Container className="flex items-center justify-between py-8">
 				{/* Left part */}
-				<div className="flex gap-4 items-center">
-					<Image src={'/logo.png'} alt="logo" width={35} height={35} />
-					<div>
-						<h1 className="text-2xl uppercase font-black">NEXT PIZZA</h1>
-						<p className="text-sm text-gray-400 leading-3">вкусней уже некуда</p>
+				<Link href={'/'}>
+					<div className="flex gap-4 items-center">
+						<Image src={'/logo.png'} alt="logo" width={35} height={35} />
+						<div>
+							<h1 className="text-2xl uppercase font-black">NEXT PIZZA</h1>
+							<p className="text-sm text-gray-400 leading-3">вкусней уже некуда</p>
+						</div>
 					</div>
+				</Link>
+
+				<div className="mx-10 flex-1">
+					<SearchInput />
 				</div>
 
 				{/* Right part */}
