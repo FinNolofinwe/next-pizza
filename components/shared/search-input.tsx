@@ -1,7 +1,7 @@
 'use client'
 import React, { FC, useRef } from 'react'
 import Link from 'next/link'
-import { useClickAway } from 'react-use'
+import { useClickAway, useDebounce } from 'react-use'
 import { Search } from 'lucide-react'
 import { Api } from '@/services/api-client'
 import { cn } from '@/lib/utils'
@@ -20,10 +20,23 @@ const SearchInput: FC<SearchInputProps> = ({ className }) => {
 		setFocused(false)
 	})
 
-	React.useEffect(() => {
-		Api.products.search(searchQuery).then((items) => setProducts(items))
-	}, [searchQuery])
-
+	useDebounce(
+		async () => {
+			try {
+				const response = await Api.products.search(searchQuery)
+				setProducts(response)
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		250,
+		[searchQuery],
+	)
+	const onClickItem = () => {
+		setFocused(false)
+		setSearchQuery('')
+		setProducts([])
+	}
 	return (
 		<>
 			{focused ? <div className="fixed left-0 top-0 w-full h-full bg-black/50 z-30"></div> : null}
@@ -34,33 +47,35 @@ const SearchInput: FC<SearchInputProps> = ({ className }) => {
 				<input
 					type="text"
 					placeholder="Найти пиццу"
-					className="rounded-2xl outline-none w-full bg-gray-100 pl-11"
+					className="rounded-2xl outline-none w-full bg-gray-100 pl-11 z-30"
 					onFocus={() => setFocused(true)}
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
 				/>
-
-				<div
-					className={cn(
-						'absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
-						focused && 'visible opacity-100 top-12',
-					)}>
-					{products.map((product) => (
-						<Link
-							key={product.id}
-							href={`/products/${product.id}`}
-							className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10 ">
-							<img
-								className="rounded-sm"
-								src={product.imageUrl}
-								width={32}
-								height={32}
-								alt={product.name}
-							/>
-							<span>{product.name}</span>
-						</Link>
-					))}
-				</div>
+				{products.length > 0 ? (
+					<div
+						className={cn(
+							'absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
+							focused && 'visible opacity-100 top-12',
+						)}>
+						{products.map((product) => (
+							<Link
+								key={product.id}
+								href={`/product/${product.id}`}
+								className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10"
+								onClick={onClickItem}>
+								<img
+									className="rounded-sm"
+									src={product.imageUrl}
+									width={32}
+									height={32}
+									alt={product.name}
+								/>
+								<span>{product.name}</span>
+							</Link>
+						))}
+					</div>
+				) : null}
 			</div>
 		</>
 	)
